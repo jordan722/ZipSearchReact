@@ -1,62 +1,63 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import CityCard from './CityCard';
 
 class Search extends Component{
   constructor(props){
     super(props);
 
     this.state = {
-      toggle: true,
       data: [],
       zip: ''
     };
-
-    this.getData = this.getData.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
-
-  getData(event){
-    event.preventDefault();
-    axios.get("http://ctp-zip-api.herokuapp.com/zip/" + this.state.zip)
-      .then(response => {
-        console.log(response.status);
-        if(response.status === 200){
-          this.setState({
-            data: response.data
-          });
-          console.log(this.state.data);
-        }
-      })
-      .catch(this.setState({data: []}))
-  }
-
-  handleChange(event){
+  handleChange = (event) => {
     this.setState({
       zip: event.target.value
     })
+
+    // get Zip Info from API only if zip code is proper length
+    // if statement added to reduce API calls
+    if(event.target.value.length === 5){
+      axios.get("http://ctp-zip-api.herokuapp.com/zip/" + event.target.value)
+        .then(response => {
+          console.log(response.status);
+          if(response.status === 200){
+            this.setState({
+              data: response.data
+            });
+            console.log(this.state.data);
+          }
+        })
+        .catch(this.setState({data: []}))
+    }
+    else{
+      this.setState({
+        data: []
+      })
+    }
   }
 
 
   render(){
     return(
-      <div>
+      <div style={{}}>
         <h2> Enter Zip Code Below </h2>
         <form>
           <input name="zip" type="text" onChange={this.handleChange} value={this.state.zip} />
-          <button onClick={this.getData}> Get Data</button>
         </form>
-        {this.state.data[0] ? (
-          <ul>
-            <li> {this.state.data[0].City} </li>
-            <li> {this.state.data[0].State} </li>
-            <li> {this.state.data[0].Lat} ,  {this.state.data[0].Long}</li>
-            <li> {this.state.data[0].EstimatedPopulation} </li>
-            <li> {this.state.data[0].TotalWages} </li>
-          </ul>
+        {this.state.data.length != 0 ? (
+          <div>
+            {this.state.data.map((item,key) =>
+              <CityCard key={key }{...item} />
+            )}
+          </div>
         ) :
         (
-          "No Results"
+          <div class="card">
+          <center>No Results Found</center>
+          </div>
         )
 
         }

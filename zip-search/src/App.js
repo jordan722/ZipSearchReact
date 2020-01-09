@@ -11,9 +11,6 @@ function App() {
 
       </header>
 
-      nsjkng
-      sndglk
-      slkgnkj
     </div>
   );
 }
