@@ -39,23 +39,29 @@ class Search extends Component{
 
 
   render(){
-      return(
-        <div>
-          <h2> Enter Zip Code Below </h2>
-          <form>
-            <input name="zip" type="text" onChange={this.handleChange} value={this.state.zip} />
-            <button onClick={this.getData}> Get Data</button>
-          </form>
-          {this.state.data[0] ? (
+    return(
+      <div>
+        <h2> Enter Zip Code Below </h2>
+        <form>
+          <input name="zip" type="text" onChange={this.handleChange} value={this.state.zip} />
+          <button onClick={this.getData}> Get Data</button>
+        </form>
+        {this.state.data[0] ? (
+          <ul>
             <li> {this.state.data[0].City} </li>
-          ) :
-          (
-            "No Results"
-          )
+            <li> {this.state.data[0].State} </li>
+            <li> {this.state.data[0].Lat} ,  {this.state.data[0].Long}</li>
+            <li> {this.state.data[0].EstimatedPopulation} </li>
+            <li> {this.state.data[0].TotalWages} </li>
+          </ul>
+        ) :
+        (
+          "No Results"
+        )
 
-          }
+        }
 
-        </div>
+      </div>
 
       );
   }
